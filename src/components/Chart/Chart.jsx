@@ -15,11 +15,14 @@ const Chart = ({ data: { confirmed, deaths, recovered }, country }) => {
     fetchAPI();
   }, []);
 
+  // const weekly = (arr) => arr.filter((item, i) => i % 7 === 0);
+
   const lineChart = (
     dailyData.length
       ? (
         <Line
           data={{
+            // labels: weekly(dailyData.map(({ date }) => date)),
             labels: dailyData.map(({ date }) => date),
             datasets: [{
               data: dailyData.map(({ confirmed }) => confirmed),
@@ -34,11 +37,32 @@ const Chart = ({ data: { confirmed, deaths, recovered }, country }) => {
               fill: true,
             }],
           }}
+          options={{
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    callback: value => {
+                      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
+                  },
+                }
+              ],
+              xAxes: [
+                {
+                  ticks: {
+                    callback: (value, index) => {
+                      if (index % 2 === 0) return '';
+                      return value;
+                    },
+                  }
+                }
+              ]
+            }
+          }}
         />
       ) : null
   );
-
-  console.log(confirmed, recovered, deaths);
 
   const barChart = (
     confirmed
