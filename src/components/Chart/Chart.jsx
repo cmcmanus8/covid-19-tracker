@@ -79,6 +79,17 @@ const Chart = ({ data: { confirmed, deaths, recovered }, country }) => {
           options={{
             legend: { display: false },
             title: { display: true, text: `Current state in ${country}`},
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    callback: value => {
+                      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
+                  },
+                }
+              ],
+            },
           }}
       />
       ) : null
